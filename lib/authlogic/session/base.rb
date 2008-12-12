@@ -439,6 +439,7 @@ module Authlogic
         end
         
         def valid_record?
+          return true unless check_user_state?
           [:active, :approved, :confirmed].each do |required_status|
             if record.respond_to?("#{required_status}?") && !record.send("#{required_status}?")
               errors.add_to_base(send("not_#{required_status}_message"))

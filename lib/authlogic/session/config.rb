@@ -161,6 +161,20 @@ module Authlogic
         end
         alias_method :login_field=, :login_field
         
+        #   Set this to false if you want to disable Authlogic's checking of the <tt>active?, approved?,</tt> or <tt>confirmed?</tt> methods on your record 
+        #   model prior to creating the session.
+        #
+        # * <tt>Default:</tt> true
+        # * <tt>Accepts:</tt> Boolean
+        def check_user_state?(value = nil)
+          if value.nil?
+            read_inheritable_attribute(:check_user_state).nil? ? true : read_inheritable_attribute(:check_user_state)
+          else
+            write_inheritable_attribute(:check_user_state, value)
+          end
+        end
+        alias_method :check_user_state=, :check_user_state?
+        
         # The error message used when the record returns false to active?
         #
         # * <tt>Default:</tt> "Your account is not active"
@@ -355,6 +369,10 @@ module Authlogic
       
         def login_field
           self.class.login_field
+        end
+        
+        def check_user_state?
+          self.class.check_user_state?
         end
         
         def not_active_message

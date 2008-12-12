@@ -103,6 +103,20 @@ module SessionTests
       assert session.respond_to?(:login)
     end
     
+    # -- TODO: The UserSession class isn't being torn down between tests so these tests
+    # don't actually test the default values of these methods
+    def test_check_user_state_method    
+      UserSession.check_user_state = true
+      assert_equal true, UserSession.check_user_state?
+      session = UserSession.new
+      assert_equal true, session.check_user_state?
+
+      UserSession.check_user_state = false
+      assert_equal false, UserSession.check_user_state?
+      session = UserSession.new
+      assert_equal false, session.check_user_state?
+    end
+    
     def test_not_active_message
       UserSession.not_active_message = "message"
       assert_equal "message", UserSession.not_active_message
