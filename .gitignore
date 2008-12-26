@@ -1,6 +1,7 @@
 .DS_Store
 *.log
 *.sqlite3
+*.tmproj
 pkg/*
 coverage/*
 doc/*

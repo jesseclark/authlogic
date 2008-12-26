@@ -191,7 +191,7 @@ module Authlogic
           if send("valid_#{find_method}?")
             self.new_session = false
             
-            if record.class.column_names.include?("last_request_at") && (record.last_request_at.blank? || last_request_at_threshold.ago >= record.last_request_at)
+            if record.class.column_names.include?("last_request_at") && (record.last_request_at.blank? || last_request_at_threshold.to_i.seconds.ago >= record.last_request_at)
               record.last_request_at = Time.now
               record.save_without_session_maintenance(false)
             end
@@ -439,13 +439,14 @@ module Authlogic
         end
         
         def valid_record?
-          return true unless check_user_state?
+          return true if disable_magic_states?
           [:active, :approved, :confirmed].each do |required_status|
             if record.respond_to?("#{required_status}?") && !record.send("#{required_status}?")
               errors.add_to_base(send("not_#{required_status}_message"))
               return false
             end
           end
+          true
         end
     end
   end
